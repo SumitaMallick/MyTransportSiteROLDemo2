@@ -1,0 +1,1167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transport for NSW | Road Occupancy Licences</title>
+  <meta name="description" content="Static TfNSW-style Road Occupancy Licence demo with Pega Web Embed for Register a Proponent." />
+
+  <!-- Pega Web Embed script -->
+  <script src="https://accenture78.pegalabs.io/prweb/PRRestService/c11nsvc/v1/pega-embed.js"></script>
+
+  <style>
+    :root {
+      --tfnsw-blue: #002664;
+      --tfnsw-accent: #00a3e0;
+      --nsw-yellow: #fdbb30;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-500: #64748b;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-900: #0f172a;
+      --green-50: #f0fdf4;
+      --green-700: #15803d;
+      --red-50: #fef2f2;
+      --red-700: #b91c1c;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 20px 45px rgba(15, 23, 42, 0.16);
+      --radius-xl: 16px;
+      --radius-2xl: 22px;
+      --radius-3xl: 30px;
+      --max-width: 1180px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--slate-900);
+      background: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(100% - 32px, var(--max-width));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      background: var(--tfnsw-blue);
+      color: white;
+      font-size: 12px;
+    }
+
+    .topbar-inner {
+      min-height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .nsw-lockup {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .nsw-lockup img {
+      height: 20px;
+      width: auto;
+    }
+
+    .fallback-dot {
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--nsw-yellow);
+    }
+
+    .topbar-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: #dbeafe;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--slate-200);
+      backdrop-filter: blur(10px);
+    }
+
+    .site-header-inner {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+    }
+
+    .brand-button {
+      border: 0;
+      background: transparent;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .brand-logo-img {
+      height: 52px;
+      width: auto;
+    }
+
+    .brand-fallback {
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      color: #fff;
+      background: var(--tfnsw-blue);
+      box-shadow: var(--shadow-sm);
+      font-weight: 900;
+    }
+
+    .brand-title {
+      font-weight: 900;
+      color: var(--tfnsw-blue);
+      font-size: 18px;
+      line-height: 1.05;
+    }
+
+    .brand-subtitle {
+      color: var(--slate-600);
+      font-weight: 700;
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--tfnsw-blue);
+      color: white;
+      border-radius: 999px;
+      padding: 5px 8px;
+    }
+
+    .nav-link, .nav-trigger {
+      border: 0;
+      background: transparent;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 10px 13px;
+      font-size: 14px;
+      font-weight: 800;
+      transition: background 0.16s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-link:hover, .nav-trigger:hover, .nav-trigger.active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--slate-300);
+      color: var(--slate-700);
+      background: white;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+    }
+
+    .mobile-menu-btn { display: none; }
+
+    .mega-menu {
+      display: none;
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(760px, calc(100vw - 32px));
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      background: white;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      z-index: 60;
+    }
+
+    .mega-menu.open { display: grid; grid-template-columns: 260px 1fr; }
+
+    .mega-copy {
+      background: var(--tfnsw-blue);
+      color: white;
+      padding: 24px;
+    }
+
+    .eyebrow {
+      color: #bae6fd;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 900;
+      margin: 0;
+    }
+
+    .mega-copy h3 {
+      margin: 14px 0 10px;
+      font-size: 25px;
+      line-height: 1.1;
+    }
+
+    .mega-copy p {
+      color: #dbeafe;
+      line-height: 1.6;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .mega-list {
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .mega-item {
+      border: 0;
+      background: transparent;
+      text-align: left;
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: background 0.16s ease;
+    }
+
+    .mega-item:hover, .mega-item.highlight { background: #eff6ff; }
+    .mega-title { color: var(--tfnsw-blue); font-weight: 900; display: block; }
+    .mega-text { color: var(--slate-600); font-size: 14px; margin-top: 5px; display: block; line-height: 1.45; }
+
+    .mobile-panel {
+      display: none;
+      border-top: 1px solid var(--slate-200);
+      background: white;
+      padding: 16px;
+    }
+
+    .mobile-panel.open { display: grid; gap: 8px; }
+    .mobile-panel button {
+      border: 0;
+      border-radius: 14px;
+      background: white;
+      text-align: left;
+      padding: 12px 14px;
+      font-weight: 800;
+      color: var(--slate-700);
+    }
+    .mobile-panel .child { margin-left: 16px; background: var(--slate-50); }
+    .mobile-panel .child-accent { margin-left: 32px; background: #eff6ff; color: var(--tfnsw-blue); }
+
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.22s ease both; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      color: white;
+      background: var(--tfnsw-blue);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.22;
+      background:
+        radial-gradient(circle at 15% 15%, var(--tfnsw-accent), transparent 34%),
+        radial-gradient(circle at 85% 10%, var(--nsw-yellow), transparent 26%);
+    }
+
+    .hero-inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      padding: 82px 0;
+    }
+
+    .hero h1 {
+      margin: 18px 0 0;
+      max-width: 760px;
+      font-size: clamp(42px, 6vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+    }
+
+    .hero p {
+      margin: 24px 0 0;
+      max-width: 620px;
+      color: #e0f2fe;
+      font-size: 18px;
+      line-height: 1.75;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      border: 0;
+      margin-top: 32px;
+      border-radius: 999px;
+      background: white;
+      color: var(--tfnsw-blue);
+      padding: 13px 24px;
+      font-weight: 900;
+      box-shadow: var(--shadow-lg);
+      text-decoration: none;
+    }
+
+    .preview-shell {
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 16px;
+      backdrop-filter: blur(6px);
+    }
+
+    .preview-card {
+      background: white;
+      color: var(--slate-900);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .preview-logo {
+      display: flex;
+      justify-content: center;
+      border-bottom: 1px solid var(--slate-100);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .journey {
+      background: var(--slate-100);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .journey-title {
+      color: var(--slate-500);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+
+    .journey-step {
+      background: white;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      color: var(--slate-700);
+      box-shadow: var(--shadow-sm);
+      margin-top: 10px;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      background: var(--slate-300);
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+    .status-dot.done { background: #22c55e; }
+
+    .cards-section { padding: 48px 0; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .grid-2-1 { display: grid; grid-template-columns: 1fr 360px; gap: 32px; }
+    .grid-300-1 { display: grid; grid-template-columns: 300px 1fr; gap: 32px; }
+
+    .card {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      background: white;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card h3, .card h2 { color: var(--tfnsw-blue); margin: 0; }
+    .card p { color: var(--slate-600); line-height: 1.65; }
+
+    .breadcrumb {
+      border-bottom: 1px solid var(--slate-200);
+      background: white;
+    }
+
+    .breadcrumb-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 0;
+      font-size: 14px;
+      color: var(--slate-600);
+    }
+
+    .breadcrumb b { color: var(--slate-900); }
+
+    .page-hero {
+      border-bottom: 1px solid var(--slate-200);
+      background: var(--slate-50);
+      padding: 50px 0;
+    }
+
+    .page-hero h1 {
+      color: var(--tfnsw-blue);
+      font-size: clamp(38px, 5vw, 56px);
+      line-height: 1;
+      margin: 12px 0 0;
+      font-weight: 900;
+      letter-spacing: -0.035em;
+    }
+
+    .page-hero p {
+      max-width: 780px;
+      margin: 20px 0 0;
+      font-size: 18px;
+      line-height: 1.75;
+      color: var(--slate-700);
+    }
+
+    .business-logo-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      padding: 32px;
+      min-height: 180px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .service-tile {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      background: white;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      text-align: left;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    button.service-tile {
+      width: 100%;
+      border: 2px solid var(--tfnsw-blue);
+    }
+
+    button.service-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .tile-icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      color: var(--tfnsw-blue);
+      background: #eff6ff;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .service-tile h3 {
+      color: var(--tfnsw-blue);
+      margin: 18px 0 0;
+      font-size: 20px;
+    }
+
+    .service-tile p {
+      color: var(--slate-600);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .open-service {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--tfnsw-blue);
+      font-weight: 900;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .rol-hero { background: white; }
+    .button-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+
+    .pill-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 20px;
+      background: var(--slate-100);
+      color: var(--slate-700);
+      font-weight: 900;
+    }
+
+    .pill-btn.active { background: var(--tfnsw-blue); color: white; }
+
+    .help-card {
+      color: white;
+      background: var(--tfnsw-blue);
+      border-radius: var(--radius-3xl);
+      padding: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .help-card h2 { margin: 0; font-size: 22px; }
+    .help-card p { color: #e0f2fe; line-height: 1.6; display: flex; gap: 12px; }
+
+    .rol-body { background: var(--slate-50); padding: 40px 0; }
+
+    .side-nav {
+      height: fit-content;
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      background: white;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .side-nav-title {
+      color: var(--slate-500);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+    }
+
+    .side-nav a {
+      display: block;
+      color: var(--slate-700);
+      text-decoration: none;
+      border-radius: 14px;
+      padding: 13px 16px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .side-nav a.active {
+      background: #eff6ff;
+      color: var(--tfnsw-blue);
+    }
+
+    .embed-section {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      background: white;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .embed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .embed-header h2 {
+      color: var(--tfnsw-blue);
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .embed-header p {
+      margin: 6px 0 0;
+      color: var(--slate-600);
+      font-size: 14px;
+    }
+
+    .badge {
+      background: var(--green-50);
+      color: var(--green-700);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .embed-panel { display: none; }
+    .embed-panel.active { display: block; }
+
+    .pega-frame {
+      padding: 24px;
+      min-height: 900px;
+      background: white;
+    }
+
+    .pega-frame-note {
+      border: 1px solid var(--slate-200);
+      border-radius: 18px;
+      background: var(--slate-50);
+      padding: 14px 16px;
+      color: var(--slate-600);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    pega-embed {
+      display: block;
+      width: 100%;
+      min-height: 820px;
+    }
+
+    .snippet-panel {
+      padding: 24px;
+    }
+
+    .snippet-panel p {
+      color: var(--slate-700);
+      line-height: 1.6;
+      margin-top: 0;
+    }
+
+    pre {
+      overflow: auto;
+      background: #020617;
+      color: #e2e8f0;
+      border-radius: 24px;
+      padding: 20px;
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .guidance-card {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-3xl);
+      background: white;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .guidance-card h2 { color: var(--tfnsw-blue); margin: 0; }
+
+    .guidance-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .guidance-step {
+      background: var(--slate-50);
+      border-radius: var(--radius-3xl);
+      padding: 20px;
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--tfnsw-blue);
+      color: white;
+      font-weight: 900;
+    }
+
+    .guidance-step h3 {
+      color: var(--tfnsw-blue);
+      margin: 16px 0 0;
+    }
+
+    .guidance-step p {
+      color: var(--slate-600);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    footer {
+      background: var(--tfnsw-blue);
+      color: white;
+      padding: 48px 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .footer-logo img { height: 52px; width: auto; }
+    .footer-copy { color: #dbeafe; line-height: 1.65; max-width: 480px; margin-top: 16px; font-size: 14px; }
+    footer h3 { margin: 0 0 16px; }
+    footer button {
+      display: block;
+      border: 0;
+      background: transparent;
+      color: #dbeafe;
+      padding: 4px 0;
+      text-align: left;
+      font-weight: 700;
+    }
+    footer button:hover { color: white; }
+
+    @media (max-width: 1020px) {
+      .main-nav, .header-search { display: none; }
+      .mobile-menu-btn { display: grid; }
+      .hero-inner, .grid-2-1, .grid-300-1 { grid-template-columns: 1fr; }
+      .tile-grid, .grid-3, .guidance-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-links { display: none; }
+      .hero-inner { padding: 56px 0; }
+      .tile-grid, .grid-3, .guidance-grid, .footer-grid { grid-template-columns: 1fr; }
+      .embed-header { align-items: flex-start; flex-direction: column; }
+      .brand-logo-img { height: 42px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div class="nsw-lockup">
+        <img
+          src="https://visitwagga.com/__data/assets/image/0008/178730/NSWGov_Waratah_Primary_WHITE_web.png"
+          alt="NSW Government"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='inline-block';"
+        />
+        <span class="fallback-dot" style="display:none"></span>
+        <span>NSW Government</span>
+      </div>
+      <div class="topbar-links">
+        <span>Contact</span>
+        <span>Complaints and feedback</span>
+        <span>Careers</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container site-header-inner">
+      <button class="brand-button" type="button" data-route="home" aria-label="Transport for NSW home">
+        <img
+          class="brand-logo-img"
+          src="https://www.transport.nsw.gov.au/themes/tfnsw_corp_theme/source/tfnsw/components/header/images/logo-TfNSW.png"
+          alt="Transport for NSW"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+        />
+        <span class="brand-fallback">
+          <span class="brand-icon">T</span>
+          <span>
+            <span class="brand-title">Transport</span><br />
+            <span class="brand-subtitle">for NSW</span>
+          </span>
+        </span>
+      </button>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <button class="nav-link" type="button" data-route="home">About us</button>
+        <button class="nav-link" type="button">Projects</button>
+        <button class="nav-trigger" type="button" id="operationsToggle">Operations ▾</button>
+        <button class="nav-link" type="button">Industry</button>
+        <button class="nav-link" type="button">Data and research</button>
+        <button class="nav-link" type="button">News and events</button>
+      </nav>
+
+      <button class="icon-btn header-search" type="button" aria-label="Search">⌕</button>
+      <button class="icon-btn mobile-menu-btn" id="mobileToggle" type="button" aria-label="Open menu">☰</button>
+
+      <div class="mega-menu" id="megaMenu" aria-label="Operations menu">
+        <div class="mega-copy">
+          <p class="eyebrow">Operations</p>
+          <h3>Move people and goods safely across NSW</h3>
+          <p>Access roads, waterways and network services for business, industry and the community.</p>
+        </div>
+        <div class="mega-list">
+          <button type="button" class="mega-item" data-route="business">
+            <span><span class="mega-title">Roads and waterways</span><span class="mega-text">Network access, road safety, maritime and operational services.</span></span>
+            <span>›</span>
+          </button>
+          <button type="button" class="mega-item highlight" data-route="business">
+            <span><span class="mega-title">Business and Industry</span><span class="mega-text">Information and resources for organisations doing business with Transport.</span></span>
+            <span>›</span>
+          </button>
+          <button type="button" class="mega-item" data-route="rol">
+            <span><span class="mega-title">Road occupancy licences</span><span class="mega-text">Register, apply and manage activities likely to impact traffic flow.</span></span>
+            <span>›</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-panel" id="mobilePanel">
+      <button type="button" data-route="home">About us</button>
+      <button type="button">Projects</button>
+      <button type="button"><strong>Operations</strong></button>
+      <button type="button" class="child" data-route="business">Roads and waterways / Business and Industry</button>
+      <button type="button" class="child-accent" data-route="rol">Road occupancy licences</button>
+      <button type="button">Industry</button>
+      <button type="button">Data and research</button>
+      <button type="button">News and events</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page active" id="page-home">
+      <article class="hero">
+        <div class="container hero-inner">
+          <div>
+            <p class="eyebrow">Transport for NSW</p>
+            <h1>Connecting people, goods and places across NSW</h1>
+            <p>A static web prototype mirroring the Transport for NSW journey from Operations to Business and Industry, then into Road Occupancy Licences and proponent registration.</p>
+            <button class="primary-btn" data-route="business" type="button">Explore Operations</button>
+          </div>
+
+          <div class="preview-shell">
+            <div class="preview-card">
+              <div class="preview-logo">
+                <img
+                  class="brand-logo-img"
+                  src="https://www.transport.nsw.gov.au/themes/tfnsw_corp_theme/source/tfnsw/components/header/images/logo-TfNSW.png"
+                  alt="Transport for NSW"
+                />
+              </div>
+              <div class="journey">
+                <p class="journey-title">Journey preview</p>
+                <div class="journey-step"><span class="status-dot done"></span>Operations</div>
+                <div class="journey-step"><span class="status-dot done"></span>Roads and waterways</div>
+                <div class="journey-step"><span class="status-dot done"></span>Business and Industry</div>
+                <div class="journey-step"><span class="status-dot"></span>Road occupancy licences</div>
+                <div class="journey-step"><span class="status-dot"></span>Register a Proponent</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <section class="container cards-section">
+        <div class="grid-3">
+          <div class="card"><h3>Operations</h3><p>Navigate to Roads and waterways, Business and Industry, and Road occupancy licences.</p></div>
+          <div class="card"><h3>Industry services</h3><p>Surface business-facing resources for partners, suppliers, and network users.</p></div>
+          <div class="card"><h3>Pega web embed</h3><p>Place Register a Proponent directly inside the ROL page as an embedded service.</p></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="page" id="page-business">
+      <div class="breadcrumb"><div class="container breadcrumb-inner">Home › Operations › Roads and waterways › <b>Business and Industry</b></div></div>
+
+      <section class="page-hero">
+        <div class="container grid-2-1">
+          <div>
+            <p class="eyebrow" style="color:var(--tfnsw-accent)">Operations / Roads and waterways</p>
+            <h1>Business and Industry</h1>
+            <p>Information and resources for people and organisations who do business with Transport for NSW, including industry partners, accredited service providers and suppliers.</p>
+          </div>
+          <div class="business-logo-card">
+            <img
+              class="brand-logo-img"
+              src="https://www.transport.nsw.gov.au/themes/tfnsw_corp_theme/source/tfnsw/components/header/images/logo-TfNSW.png"
+              alt="Transport for NSW"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section class="container cards-section">
+        <div class="tile-grid">
+          <article class="service-tile"><div class="tile-icon">🚚</div><h3>Heavy vehicles</h3><p>Information for heavy vehicle industry, operators and truck drivers.</p></article>
+          <article class="service-tile"><div class="tile-icon">🏢</div><h3>Partners and suppliers</h3><p>Resources for contractors, consultants, suppliers and third parties.</p></article>
+          <article class="service-tile"><div class="tile-icon">⛴</div><h3>Maritime dealers</h3><p>Support for vessel registration processes and maritime services.</p></article>
+          <article class="service-tile"><div class="tile-icon">📋</div><h3>Private development and third party work</h3><p>Guidance where projects interact with roads, rail or waterways.</p></article>
+          <article class="service-tile"><div class="tile-icon">⚠</div><h3>Event management guidelines</h3><p>Guides and resources to help plan outdoor street events.</p></article>
+          <button type="button" class="service-tile" data-route="rol">
+            <div class="tile-icon" style="background:var(--tfnsw-blue);color:white">✓</div>
+            <h3>Road occupancy licences</h3>
+            <p>A Road Occupancy Licence is required for any activity likely to impact on traffic flow, even if that activity takes place off-road.</p>
+            <span class="open-service">Open service ›</span>
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <section class="page" id="page-rol">
+      <div class="breadcrumb"><div class="container breadcrumb-inner">Home › Operations › Roads and waterways › Business and Industry › <b>Road occupancy licences</b></div></div>
+
+      <section class="page-hero rol-hero">
+        <div class="container grid-2-1">
+          <div>
+            <p class="eyebrow" style="color:var(--tfnsw-accent)">Business and Industry</p>
+            <h1>Road occupancy licences</h1>
+            <p>A Road Occupancy Licence is required for any activity likely to impact traffic flow, including activities that take place off-road.</p>
+          </div>
+          <aside class="help-card">
+            <h2>Need help?</h2>
+            <p>☎ Network Access Coordination Unit: 02 8396 1513</p>
+            <p>✉ tmc_piu@transport.nsw.gov.au</p>
+            <p>✓ Use your organisation details to start registration.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="rol-body">
+        <div class="container grid-300-1">
+          <aside class="side-nav">
+            <p class="side-nav-title">On this page</p>
+            <a href="#register" class="active">Register a Proponent</a>
+            <a href="https://accenture78.pegalabs.io/prweb" target="_blank" rel="noopener noreferrer">Login to ROL</a>
+            <a href="#contact">Contact us</a>
+          </aside>
+
+          <div style="display:grid;gap:32px;">
+            <section class="embed-section" id="register">
+              <div id="guidance-view">
+                <div class="embed-header">
+                  <div>
+                    <h2>Registration guidance</h2>
+                    <p>Review the steps before starting your registration.</p>
+                  </div>
+                  <span class="badge" style="background-color: var(--slate-100); color: var(--slate-700);">Informational</span>
+                </div>
+                <div style="padding: 24px;">
+                  <div class="guidance-grid">
+                    <article class="guidance-step"><div class="step-num">1</div><h3>Confirm organisation</h3><p>Use ACN or ABN details where your organisation is registered.</p></article>
+                    <article class="guidance-step"><div class="step-num">2</div><h3>Register contact</h3><p>Capture primary proponent, on-site contact and authorised representative details.</p></article>
+                    <article class="guidance-step"><div class="step-num">3</div><h3>Submit request</h3><p>Send the registration case to the Pega workflow for validations and follow-up.</p></article>
+                  </div>
+                  <button class="primary-btn" id="start-registration-btn" style="margin-top: 24px;">Register a Proponent →</button>
+                </div>
+              </div>
+
+              <div id="embed-view" style="display: none;">
+                <div class="embed-header">
+                  <div>
+                    <h2>Register a Proponent</h2>
+                    <p>Live Pega Web Embed for the Proponent Registration case type.</p>
+                  </div>
+                  <span class="badge">Embedded service</span>
+                </div>
+                <div class="embed-panel active" id="embedPanel">
+                  <div class="pega-frame">
+                    <div class="pega-frame-note">
+                      The form below is rendered using the supplied Pega Web Embed configuration. If it does not load, check CORS, OAuth client allow-listing, and browser console errors for the Pega server domain.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-logo">
+        <img
+          src="https://transportnsw.smartygrants.com.au/s/site/transportnsw/logo-white.png"
+          alt="Transport for NSW"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+        />
+        <div style="display:none;font-weight:900;font-size:24px;">Transport for NSW</div>
+        <p class="footer-copy">Static web page for Operations, Business and Industry, Road Occupancy Licences and Pega-based proponent registration.</p>
+      </div>
+      <div>
+        <h3>Quick links</h3>
+        <button type="button" data-route="home">Home</button>
+        <button type="button" data-route="business">Business and Industry</button>
+        <button type="button" data-route="rol">Road occupancy licences</button>
+      </div>
+      <div>
+        <h3>Accessibility</h3>
+        <p class="footer-copy">Keyboard-friendly navigation, clear focus states and responsive layouts are included in this static demo.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const pages = {
+        home: document.getElementById('page-home'),
+        business: document.getElementById('page-business'),
+        rol: document.getElementById('page-rol')
+      };
+
+      const megaMenu = document.getElementById('megaMenu');
+      const operationsToggle = document.getElementById('operationsToggle');
+      const mobileToggle = document.getElementById('mobileToggle');
+      const mobilePanel = document.getElementById('mobilePanel');
+
+      function showPage(route) {
+        // This function just handles showing/hiding the correct page content
+        const targetRoute = pages[route] ? route : 'home';
+        Object.keys(pages).forEach(key => {
+          pages[key].classList.toggle('active', key === targetRoute);
+        });
+
+        if (megaMenu) megaMenu.classList.remove('open');
+        if (operationsToggle) operationsToggle.classList.remove('active');
+        if (mobilePanel) mobilePanel.classList.remove('open');
+        if (mobileToggle) mobileToggle.textContent = '☰';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function navigate(route) {
+        // This function changes the hash, which triggers the 'hashchange' event
+        window.location.hash = route;
+      }
+
+      document.querySelectorAll('[data-route]').forEach(el => {
+        el.addEventListener('click', function () {
+          navigate(this.getAttribute('data-route'));
+        });
+      });
+
+      operationsToggle.addEventListener('click', function () {
+        megaMenu.classList.toggle('open');
+        operationsToggle.classList.toggle('active');
+      });
+
+      mobileToggle.addEventListener('click', function () {
+        mobilePanel.classList.toggle('open');
+        mobileToggle.textContent = mobilePanel.classList.contains('open') ? '×' : '☰';
+      });
+
+      document.addEventListener('click', function (event) {
+        const withinMenu = megaMenu.contains(event.target) || operationsToggle.contains(event.target);
+        if (!withinMenu) {
+          megaMenu.classList.remove('open');
+          operationsToggle.classList.remove('active');
+        }
+      });
+
+      const startRegistrationBtn = document.getElementById('start-registration-btn');
+      const guidanceView = document.getElementById('guidance-view');
+      const embedView = document.getElementById('embed-view');
+      let embedCreated = false; // Flag to ensure the embed is only created once
+
+      if (startRegistrationBtn) {
+        startRegistrationBtn.addEventListener('click', function() {
+          if (guidanceView) guidanceView.style.display = 'none';
+          if (embedView) {
+            embedView.style.display = 'block';
+
+            // Dynamically create the Pega embed element only if it hasn't been created yet
+            if (!embedCreated) {
+              const embedContainer = document.querySelector('.pega-frame');
+              if (embedContainer) {
+                const pegaEmbed = document.createElement('pega-embed');
+                pegaEmbed.id = "theEmbed";
+                pegaEmbed.setAttribute('action', 'createCase');
+                pegaEmbed.setAttribute('caseTypeID', 'MyOrg-ROLManag-Work-ProponentRegistration');
+                pegaEmbed.setAttribute('themeID', 'ROLManag');
+                pegaEmbed.setAttribute('casePage', 'simplifiedAssignment');
+                pegaEmbed.setAttribute('appAlias', 'rol-management');
+                pegaEmbed.setAttribute('pegaServerUrl', 'https://accenture78.pegalabs.io/prweb/');
+                pegaEmbed.setAttribute('autoReauth', 'true');
+                pegaEmbed.setAttribute('authService', 'pega');
+                pegaEmbed.setAttribute('clientId', '14062449173242113978');
+                pegaEmbed.style.width = '100%';
+                
+
+                // Define a function to reset the view after the Pega interaction ends
+                const resetPegaEmbedView = () => {
+                  if (embedView) embedView.style.display = 'none';
+                  if (guidanceView) guidanceView.style.display = 'block';
+
+                  // Remove the embed element and reset the flag to allow re-creation
+                  const embedToRemove = document.getElementById('theEmbed');
+                  if (embedToRemove) embedToRemove.remove();
+                  embedCreated = false;
+                };
+
+                // Listen for Pega events that signify the end of the user's interaction
+                pegaEmbed.addEventListener('embedcloseconfirmview', resetPegaEmbedView);
+                pegaEmbed.addEventListener('embedeventcancel', resetPegaEmbedView);
+                pegaEmbed.addEventListener('pega:user:work:cancel', resetPegaEmbedView);
+                pegaEmbed.addEventListener('pega:user:event:cancel', resetPegaEmbedView);
+                pegaEmbed.addEventListener('pega:user:work:submit', resetPegaEmbedView);
+                pegaEmbed.addEventListener('embedcaseclosed', resetPegaEmbedView);
+                
+                // --- DEBUGGING STEP ---
+                // The listener below will log ALL events from the Pega embed to the browser console.
+                pegaEmbed.addEventListener('pega:*', (event) => {
+                  console.log('Pega event fired:', event.type, event.detail);
+                });
+                
+                embedContainer.appendChild(pegaEmbed);
+                embedCreated = true;
+              }
+            }
+
+            embedView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      }
+
+      function handleRouteChange() {
+        // Get the route from the hash (e.g., #rol -> "rol")
+        const route = window.location.hash.substring(1);
+        showPage(route || 'home');
+      }
+
+      // Listen for hash changes to handle back/forward buttons and direct link clicks
+      window.addEventListener('hashchange', handleRouteChange);
+
+      // Handle the initial page load
+      handleRouteChange();
+    })();
+  </script>
+</body>
+</html>

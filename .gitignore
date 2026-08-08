@@ -1,0 +1,6 @@
+# Ignore all files and directories by default
+*
+
+# But re-include the specific files we want to track
+!index.html
+!.gitignore
